@@ -146,7 +146,7 @@ router.get("/refreshindex",isLoggedIn,function(req,res)
 
 
 
-router.get("/getproducts",isLoggedIn,function(req,res)
+router.get("/getproducts",function(req,res)
 {
     Camp.find({},function(err, camps) {
        

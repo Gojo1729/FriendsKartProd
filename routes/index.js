@@ -249,7 +249,7 @@ router.post("/register",upload.single("userImage"), async(req, res,next)=>
 });
 
 router.get("/login",function(req, res) {
-    res.render("login.ejs");
+   return res.render("login.ejs");
 });
 
 
@@ -344,7 +344,7 @@ function isLoggedIn(req,res,next){
 }
 
 router.get("/logout",function(req,res){
-    
+  
     req.flash("success","logged you out!");
     req.logout();
     res.redirect("/campgrounds");
