@@ -1,0 +1,97 @@
+<% include ../partials/header.ejs %>
+<script async src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+    <div class="container">
+       
+            
+      <h1> <span style="color:red">My</span> orders </h1>
+       <h4>You have <span style="color:red"><%= camps.length %></span> Orders</h4>
+       <hr>
+    
+  <div class="data">
+   <div class="row text-center" style="display:flex; flex-wrap:wrap;">
+     
+                <% camps.forEach(function(camp){ %>
+   <% if(!camp.sale) { %>
+     <div class="col-lg-3 col-xs-6">
+        <div class="thumbnail">
+            
+                 <img class="img" src="<%= camp.image %>" /> 
+            
+        <div class="caption">
+            <h4><%= camp.name %></h4> 
+            <% if(!camp.recieved && !camp.money) { %>
+            <% if(!camp.money) { %>
+             <form action="/revoke/<%= camp._id %>" method="POST" style="display:inline"> 
+                <button class="btn btn-danger " style="margin-bottom:5px">Cancel Order</button>
+            </form>
+            <% } %>
+           
+             <a href="/campgrounds/buyer/<%= camp._id %>" class="btn btn-primary">More info</a>
+         <%    if(camp.agree ){ %>
+                <label>Seller has accepted to sell the product to you</label>   
+                
+                  <% } else if(camp.sold) { %>
+                  <label>Seller has accepted to chat with you</label>   
+                  <% }  else { %>
+            <label>Seller has still not accepted your request</label>
+            <% } %>
+        <% } else if(camp.money) { %>
+         <label>Money recieved by the seller</label>
+         <% if(!camp.recieved) { %>
+          <a href="/campgrounds/buyer/<%= camp._id %>" class="btn btn-primary">More info</a>
+         <% } %>
+         
+         
+         <% } %>
+        </div>
+    
+        </div>
+    </div>
+     <% } %>
+    <% }); %>
+               
+     
+
+    </div>
+       
+  
+  </div>
+       
+       
+    
+    
+    
+   </div> 
+    
+
+    
+</div>
+<script>
+
+     function fetch_data()
+ {
+   
+  console.log("inside ajax");
+  $.ajax({
+   url:"https://friendskart-shivu1998.c9users.io/mykart/refresh",
+   type:"GET",
+   datatype:"json",
+   success:function(data){
+    $(".data").html(data);
+      
+    
+   }
+  })
+ }
+ setInterval('fetch_data()', 1500);
+
+    
+    
+    
+    
+    
+    
+    
+</script>
+<% include ../partials/footer.ejs %>

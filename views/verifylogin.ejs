@@ -1,0 +1,31 @@
+<% include partials/header.ejs %>
+<div class="container-fluid" style="max-width:450px">
+   
+        <form action="/verify/login/<%= token %>" method="POST">
+        <h1 style="text-align:center">Verify Your Account</h1>
+         <div style="margin: 20px auto">
+             <div class="form-group">
+                  <input type="Number" class="form-control" name="username" placeholder="SR number">
+             </div>
+       
+           <div class="form-group">
+                 <input type="password" class="form-control" name="password" placeholder="password">
+           </div>
+           <div class="form-group">
+                <button class="btn btn-primary btn-lg btn-block">Submit</button>
+           </div>
+           <a href="/forgot">forgot password???</a>
+          
+      
+        </div>
+        </form>
+    
+</div>
+
+
+
+
+<% include partials/footer.ejs %>
+
+
+

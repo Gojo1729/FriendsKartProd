@@ -1,0 +1,117 @@
+<% include ../partials/header2.ejs %>
+
+<div class="container">
+  <div class="row">
+   <div class="col-md-6 ">
+      <div class="thumbnail" >
+        <img  class="img-responsive" src="<%= camp.image %>" >
+       
+        <div class="caption-full">
+          <div class="pull-right">
+              
+              <h1 ><%= camp.price %>&#x20b9</h1>
+               <p><%= camp.date.toDateString() %></p>
+         
+          </div>
+      
+          
+        
+        <h4><%= camp.name %></h4>
+        <p><%= camp.description %></p>
+        <p>
+          <em>Submitted by <strong><%= camp.author.username%></strong></em>
+        </p>
+        <% if(nanu && camp.author.id.equals(nanu._id)){ %>
+        <a href="/campgrounds/<%= camp._id %>/edit" class="btn btn-warning">Edit</a>
+        <form action="/campgrounds/<%= camp._id %>?_method=DELETE" method="POST" id="form-delete" style="display:inline">
+          <button class="btn btn-danger" >Delete</button>
+        </form>
+      <%    } else { %>
+      
+        <div class="text-right">
+         <% if((nanu && !nanu.isAdmin) || !nanu){ %>
+            <% if(fav == true) { %>
+              
+              <a href="/product/remove/fav/<%= camp._id %>" class="btn btn-warning" style="float:left">Remove from Favourites </a>              
+            <% } else { %> 
+           <a href="/product/add/fav/<%= camp._id %>" class="btn btn-warning" style="float:left">Add to Favourites<img src="../stylesheets/red.png" style="height:16px;width:16px;float:right;background:orange;margin-left:5px"> </a>
+            
+           <% } %>
+           
+           <a href="/campgrounds/buy/<%= camp._id %>" class="btn btn-success">Buy</a>
+           
+           <% }  %>
+            <% if(nanu && nanu.isAdmin){ %>
+           <a href="/campgrounds/buyer/<%= camp._id %>" class="btn btn-success">Seller Info</a>
+           <% } %>
+        </div>
+       
+      
+      <% } %>
+      </div>
+      </div>
+   </div>
+    <div class="col-md-6">
+     
+      <div class="well">
+        <div class="text-right">
+          <%  if(!nanu || !nanu.isAdmin){ %>
+          <form action="/campgrounds/<%= camp._id %>/comments" method="POST"  >
+            <div class="form-group">
+               <input class="form-control" type="text" placeholder="Comment...." name="comments[text]" autocomplete="off">
+               
+            </div>
+            <button class="btn btn-success btn-sm " >Add a comment</button>
+          </form>
+          
+       
+          <% } %>
+        </div>
+       
+          <% camp.comments.forEach(function(comment){ %>
+           <hr style="height:2px;background-color:#efefef">
+          <div class="row">
+              
+            <div class="col-md-12">
+               <strong><%= comment.author.username %></strong>
+               <span class="pull-right"><%= comment.date.toDateString() %></span>
+                <p>
+                  <%= comment.text %>
+                   <form action="/product/comment/<%= camp._id %>/viewreplies/<%= comment._id %>" method="GET" style="display:inline">
+                     <% if(comment.comments.length > 0 ) { %>
+                      <button class="btn btn-link">View Replies (<%= comment.comments.length %>) </button> 
+                     <% } %>
+                 
+                </form>
+                </p>
+                <% if(nanu && comment.author.id.equals(nanu._id)) { %>
+                <a  class="btn btn-xs btn-link"  href="/campgrounds/<%= camp._id %>/comments/<%= comment._id %>/edit">Edit</a>
+                <form action="/campgrounds/<%= camp._id %>/comments/<%= comment._id %>?_method=DELETE" method="POST" style="display:inline">
+                  <button class="btn btn-link">Delete</button> 
+                </form>
+                <% } else if(nanu && nanu.isAdmin){ %>
+          <form action="/campgrounds/<%= camp._id %>/comments/<%= comment._id %>?_method=DELETE" method="POST" style="display:inline">
+                  <button class="btn btn-link">Delete</button> 
+                </form>
+                
+          <% } else{ %>
+          
+         
+          <form action="/product/comment/<%= camp._id %>/reply/<%= comment._id %>" method="POST" style="display:inline">
+                  <button class="btn btn-link">Reply</button> 
+                </form>
+                 
+            
+                
+          <% } %>
+          
+          <% }); %>
+
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+
+<% include ../partials/footer.ejs %>

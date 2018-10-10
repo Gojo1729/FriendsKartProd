@@ -1,0 +1,81 @@
+<% include ../partials/header.ejs %>
+<script async src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+
+  <div class="container">
+    <div class="row">
+         <div style="text-align:center">
+          <div id="refresh_seller">
+                <% if(!camp.sold){ %>
+             <h1>Your product is requested by</h1>
+             <% } else { %>
+             <h1>We have notified the buyer that you have accepted to chat </h1>
+             <% } %>
+             <h2>Buyer Id:<%= buyer.profileName %></h2>
+           
+             
+             <img src=""/>
+             <% if(!camp.sold){ %>
+             <h3>Someone has requested your product, accept the request to chat with the Buyer</h3>
+             <a href="/product/accept/<%= camp._id %>" class="btn btn-success">Accept the request</a>
+             <a href="/product/decline/<%= camp._id %>" class="btn btn-danger">Delete the request</a>
+             <% } else {%>
+                    <label ><h3>Click below to chat with buyer???</h3></label>
+                    
+                 <form action="http://vijethvk11-com.stackstaging.com/chat/login.php" method="POST">
+                     <input type="hidden" value="Buyer" name="Buyer"> 
+                     <input type="submit" id="chat" value="Chat" class="btn btn-success" >
+                    <input type="hidden" name="first" value="<%= seller_usn %>" >
+                    <input type="hidden" name="second" value="<%= buyer.username %>">
+                </form>
+             <div>
+                <% if(!camp.agree) { %>
+                  <label><h3>Do  you agree to sell your product??? </h3></label>
+                  <div>
+                <a href="/agree/<%=camp._id %>" class="btn btn-success">I agree</a>
+                <a href="/campgrounds/user/<%=camp.author.id %>" class="btn btn-danger">No, I don't</a>    
+                  </div>
+                 
+                 <% } else if(!camp.money){ %>
+                
+                   <label><h3>Click yes whenever you recieve the money for your product</h3></label>
+                   <div>
+                <a href="/money/<%=camp._id %>" class="btn btn-success">Yes</a>
+                <a href="/campgrounds/user/<%=camp.author.id %>" class="btn btn-danger">No</a>     
+                   </div>
+               
+                  <% } %>
+             </div>
+            <% } %>
+         </div>
+         </div>
+    </div>
+</div>  
+
+
+<script>
+ 
+ fetch_user();
+ function fetch_user()
+ {
+  console.log("inside buyer ajax");
+  $.ajax({
+   url:"https://friendskart-shivu1998.c9users.io/campgrounds/sell/refresh/<%= camp._id %>",
+   type:"GET",
+   datatype:"json",
+   success:function(data){
+    if(data !=0){
+    $("#refresh_seller").html(data);
+    setInterval('fetch_user()', 5000);
+    }
+    
+   }
+  })
+ }
+ 
+
+  
+</script>
+
+
+<% include ../partials/footer.ejs %> 

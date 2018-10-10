@@ -1,0 +1,57 @@
+<div class="row text-center" style="display:flex; flex-wrap:wrap;">
+    
+            <% camps.forEach(function(camp){ %>
+     <div class="col-lg-3 col-xs-6">
+        <div class="thumbnail">
+           
+                 <img class="img" src="<%= camp.image %>" /> 
+          
+       
+        <div class="caption">
+            <h4><%= camp.name %></h4>
+        </div>
+      
+     
+             
+        <div style="padding-bottom:10px">
+       
+        <% if(!camp.sale && !camp.sold && !camp.recieved){ %>
+        <label >Your product has been requested by a buyer , check below for more info </label>
+        <a href="/campgrounds/sell/<%= camp._id %>" class="btn btn-warning">Product requested</a>
+        
+      <%    }else if(camp.sold && !camp.sale && !camp.recieved && !camp.agree){ %>
+       <label >You have accepted to chat with the buyer </label>
+        <a href="/product/decline/<%= camp._id %>" class="btn btn-danger">Delete the request</a>
+       <a href="/campgrounds/sell/<%= camp._id %>" class="btn btn-warning btn">More info</a>
+           <% } else if(camp.recieved){ %>
+           <label>Product recieved successfully</label>
+           <% if(!camp.money) { %>
+             <a href="/campgrounds/sell/<%= camp._id %>" class="btn btn-warning btn">More info</a>
+             
+           <% } %>
+          
+           
+           <% } else if(camp.agree) { %>
+             <label>You have agreed to sell your product</label>
+             <% if(!camp.recieved && !camp.money) { %>
+                 <a href="/product/decline/<%= camp._id %>" class="btn btn-danger">Delete the request</a>
+               <% } %>
+       <a href="/campgrounds/sell/<%= camp._id %>" class="btn btn-warning btn">More info</a>
+          <%  } else{ %>
+           
+            <label >No buyer has requested your product yet </label>
+                 <form action="/campgrounds/<%= camp._id %>?_method=DELETE" method="POST" id="form-delete" style="display:inline">
+                    <button class="btn btn-danger" >Delete</button>
+                </form>
+                <label class="btn btn-success ">In sale</label>
+             <% } %>
+        </div>
+        </div>
+    </div>
+      
+    <% }); %>
+    
+     
+
+    </div>
+    

@@ -1,0 +1,36 @@
+  
+    <div id="responsecontainer">
+ <div class="row  text-center display-flex" style="display:flex; flex-wrap:wrap;">
+ <% camps.forEach(function(camp){ %>
+            <% if(camp.sale ){ %>
+            <a href="/campgrounds/<%= camp._id%>">
+                   <div class="col-lg-3 col-xs-6">
+                 <a href="/campgrounds/<%= camp._id %>">
+                    <div class="thumbnail" >
+            <img class="img" src="<%= camp.image %>" >
+            
+        <div class="caption">
+              <h4 style="max-lines:1; text-overflow: ellipsis;"><%= camp.name %></h4>
+            <h4><span style="color:red"><%= camp.price %></span> &#x20b9</h4>
+        
+      
+        </div>
+      </div>             
+                 </a>
+                 
+        
+       </div>
+            </a>
+          
+   
+     <% } %>
+        
+    <% }); %>
+    
+    </div>
+        
+    </div>
+    
+    
+    
+ 

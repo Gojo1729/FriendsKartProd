@@ -1,0 +1,133 @@
+<% include ../partials/header.ejs %>
+<style>
+    #key{
+        color:red;
+    }
+</style>
+<script async src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+   
+<% if(loggedUser){ %>
+   <% if(!loggedUser.isAdmin){ %>
+    <div class="container">
+  <h1 >Search results for <span id="key">"<%= key %>"</span></h1>
+  <h3>Showing <%= camps.length %> results</h3>
+    <div class="response">
+     <div id="responsecontainer">
+            <div class="row  text-center display-flex" style="display:flex; flex-wrap:wrap;">
+          
+               <% camps.forEach(function(camp){ %>
+            <% if(camp.sale ){ %>
+             <div class="col-lg-3 col-xs-6">
+              <a href="/campgrounds/<%= camp._id %>">
+                <div class="thumbnail" >
+            <img class="img" src="<%= camp.image %>" >
+        <div class="caption">
+            <h4><%= camp.name %></h4>
+              <h4 style="color:red"><%= camp.sale?"Product In Sale":"Not In Sale" %></h4>
+        
+     
+        </div>
+      </div>
+              </a>
+       
+       </div>
+   
+     <% } %>
+        
+    <% }); %>
+          
+          
+ 
+        </div>
+    
+    
+    </div>
+    </div>
+       
+    </div>
+	   <% }else{ %>
+       <div class="container">
+         <h1>Search results for  <span id="key">"<%= key %>"</span></h1>
+        
+    <div class="row text-center display-flex " style="display:flex; flex-wrap:wrap;">
+       
+   
+  
+       
+    <% camps.forEach(function(camp){ %>
+      
+     <div class="col-lg-3 col-xs-6">
+     
+        <div class="thumbnail" >
+            
+                   <img class="img" src="<%= camp.image %>">
+        
+              
+        <div class="caption">
+            <h4><%= camp.name %></h4>
+            <h4>InSale:<%= camp.sale?"Yes":"No" %></h4>
+            <h4>Sold:<%= camp.sold?"Yes":"No" %></h4>
+        
+        <div style="padding-bottom:10px">
+             <div class="text-center">
+                 <form action="/campgrounds/<%= camp._id %>?_method=DELETE" method="POST" id="form-delete" style="display:inline">
+                    <button class="btn btn-danger" >Delete</button>
+                </form>
+                 <a href="/campgrounds/<%= camp._id %>" class="btn btn-success " style="padding-bottom:10px">Product Details</a>
+            </div>
+           
+        </div>
+        </div>
+        </div>
+       
+    </div>
+     
+      
+    <% }); %>
+    
+    </div>
+        </div>
+      
+      <% } %>
+     <% } else{ %>
+       <div class="container">
+    <h1 >Search results for  <span id="key">"<%= key %>"</span></h1>
+    <div class="response">
+     <div id="responsecontainer">
+            <div class="row  text-center display-flex" style="display:flex; flex-wrap:wrap;">
+          
+               <% camps.forEach(function(camp){ %>
+            <% if(camp.sale ){ %>
+             <div class="col-lg-3 col-xs-6">
+              <a href="/campgrounds/<%= camp._id %>">
+                <div class="thumbnail" style="border:1px solid #aeaeae">
+            <img class="img" src="<%= camp.image %>" >
+        <div class="caption">
+            <h4><%= camp.name %></h4>
+        
+     
+        </div>
+      </div>
+              </a>
+       
+       </div>
+   
+     <% } %>
+        
+    <% }); %>
+          
+          
+ 
+        </div>
+    
+    
+    </div>
+    </div>
+       
+    </div>
+     <% } %>
+
+     
+     
+     
+<% include ../partials/footer.ejs %>

@@ -1,0 +1,62 @@
+
+<% include ../partials/header.ejs %>
+<div id="replace">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+<div class="container-fluid" style="max-width:450px">
+    <form action="/campgrounds" method="POST" id="Form1" enctype="multipart/form-data">
+            <h1 style="text-align:center">Add a new Product</h1>
+            <div style="margin: 20px auto">
+                
+            <div class="form-group">
+            <input type="text" class="form-control" name="camp[campSiteName]" placeholder="Product Name" required>
+            </div>
+             <div class="form-group">
+               <img class="preview">
+                    <label for="image">Image</label>
+                    <input type="file" id="upload" name="image" accept="image/*"  required>
+              
+                </div>
+                <div class="thumbnail">
+                    <img src=" " style="height:320px" alt="" name="preview"  id="preview" >
+                </div>
+
+             <div class="form-group">
+                <input type="text" class="form-control" name="camp[description]" placeholder="description" required>
+            </div>
+            <div class="form-group">
+                <input type="number" class="form-control" name="camp[price]" placeholder="price" step="any" required >
+            </div>
+            <div class="form-group">
+                <input type="submit" id="submit" class="btn  btn-primary btn-lg btn-block" value="Add">
+            </div>
+            <a href="/campgrounds">Go Back</a>
+            </div>
+    </form>
+ 
+	
+<script type="text/javascript" src='../js/compress.js'></script>
+<script type="text/javascript" src='../js/index2.js'></script>
+</div> 
+</div>    
+
+
+
+<script>
+    document.getElementById("submit").addEventListener("click",function(){
+        $(".navbar").hide();
+       $.ajax({
+           
+           url:"https://friendskart-shivu1998.c9users.io/upload",
+           type:"GET",
+           datatype:"json",
+           success:function(data)
+           {
+              $("#replace").html(data);
+           }
+           
+       }) ;
+    });
+</script>
+
+<% include ../partials/footer.ejs %>

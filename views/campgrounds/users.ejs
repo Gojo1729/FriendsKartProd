@@ -1,0 +1,47 @@
+<% include ../partials/header.ejs %>
+    <div class="container">
+    <header class="jumbotron">
+      <h1>Users </h1> 
+    </header>
+    
+    <div class="row text-center" style="display:flex; flex-wrap:wrap;">
+       
+    <% users.forEach(function(user){ %>
+     <% if(!user.isAdmin){ %>
+     <div class="col-lg-3 col-sm-6">
+        <div class="thumbnail">
+            <div class="image">
+                 <img src="<%= user.Image %>" /> 
+            </div>
+       
+        <div class="caption">
+            <h4><strong>User name:</strong><%= user.profileName %></h4>
+            <h4><strong>SR No:</strong><%= user.username %></h4>
+            <h4><strong>USN:</strong><%= user.usn %></h4>
+            <h4><strong>Email:</strong><%= user.email %></h4>
+            <h4><strong>Phone No:</strong><%= user.phoneNo %></h4>
+            <h4><strong>Created on:</strong><%= user.created.toDateString() %></h4>
+             <h4><strong>Last LogIn :</strong><%= user.lastLogIn %></h4>
+        </div>
+        <div style="padding-bottom:10px">
+            <div class="text-center">
+                 <form action="/user/<%= user._id %>?_method=DELETE" method="POST" id="form-delete" style="display:inline">
+                    <button class="btn btn-danger" >Delete</button>
+                </form>
+                
+            </div>
+       
+       
+      
+        </div>
+        </div>
+    </div>
+     <% } %>
+    <% }); %>
+    
+    </div>
+    
+    
+
+</div>
+<% include ../partials/footer.ejs %>

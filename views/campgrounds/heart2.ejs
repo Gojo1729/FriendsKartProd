@@ -1,0 +1,34 @@
+<div class="container">   
+    
+      <h1 >friendsKart</h1>  
+  
+    <div id="responsecontainer">
+ <div class="row  text-center display-flex" style="display:flex; flex-wrap:wrap;">
+ <% camps.forEach(function(camp){ %>
+            <% if(camp.sale ){ %>
+             <div class="col-lg-3 col-xs-6">
+        <div class="thumbnail" >
+            <img class="img" src="<%= camp.image %>" >
+        <div class="caption">
+            <h4><%= camp.name %></h4>
+        
+        <div style="padding-bottom:10px">
+             <div class="text-center">
+                 <a href="/campgrounds/<%= camp._id %>" class="btn btn-success " style="padding-bottom:10px">Product Details</a>
+            </div>
+        </div>
+        </div>
+      </div>
+       </div>
+   
+     <% } %>
+        
+    <% }); %>
+    
+    </div>
+        
+    </div>
+    </div>
+    
+    
+ 

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+           
+          
+  <link  href="/stylesheets/main2.css" rel="stylesheet">
+         <link  rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script async src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    
+
+           <link href="https://fonts.googleapis.com/css?family=Pacifico&amp;subset=latin-ext" rel="stylesheet">
+           
+        <title>
+       friendsKart
+        </title>
+        <link rel="shortcut icon" type="image/x-icon" href="/stylesheets/friendship.png" />
+      
+<!-- Latest compiled and minified JavaScript -->
+<style>
+     @media(max-width: 40em) {
+        #laptop {
+             display:none;
+             visibility:hidden; 
+}
+
+</style>
+         
+    </head>
+    <body style="margin-top:60px;">
+        <nav class="navbar navbar-default navbar-fixed-top"   >
+    <div class="container fluid">
+        <div class="navbar-header">
+             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-nav-data" 
+			 aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+     <% if(loggedUser && !loggedUser.isAdmin){ %>
+          <a type="button" class="btn btn-link" style="margin-top:8px;float:left;color:#000000"  href="/campgrounds/new"  aria-label="Left Align">
+  <span class="glyphicon glyphicon-camera" aria-hidden="true"></span>
+</a>
+     <% } %>
+
+                
+                <a class="navbar-brand"  style="color:#000000;font-family: 'Pacifico', cursive;">friendsKart</a>
+               
+               
+            
+               </div>
+        
+        <div class="collapse navbar-collapse"  id="bs-nav-data">
+            <ul class="nav navbar-nav navbar-right">
+                 
+                <li><a href="/campgrounds">Home</a></li>
+                  <% if(loggedUser){ %>
+                    
+                    <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><%= loggedUser.profileName %>'s Account<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+             <li style="text:center"><a href="/campgrounds/user/<%= loggedUser._id %>">My products</a></li>
+              <li role="separator" class="divider"></li>
+                    <li><a href="/products/myfav/<%= loggedUser._id %>">My Favourites</a></li>
+                     <li role="separator" class="divider"></li>
+                      <li><a href="/mykart">My Orders</a></li>
+                       <li role="separator" class="divider"></li>
+                      <li><a href="/logout">Logout</a></li>
+                    
+           
+           
+          </ul>
+        </li>
+        
+           
+               <form  action="/campgrounds" method="GET" class="navbar-form navbar-left" id="laptop">
+        <div class="form-group">
+            <input type='text' name="search" placeholder='Search All Products' class="form-control">
+       
+        </div>
+        <button type="submit" class="btn btn-default">Submit</button>
+      </form>
+                 
+        
+                
+                    
+                
+            
+                      <li><a href="/products/categories">Shop by category</a></li>
+                     
+                    
+                     
+                <% } else { %>
+                <li><a href="/login">Login</a></li>
+                <li><a href="/register">Sign Up</a></li>
+              <% } %>
+                
+                <li><a href="http://vijethvk11-com.stackstaging.com/php/form.php">Contact Us</a></li>
+                
+              
+            </ul>
+            
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <% if(error && error.length >0){ %>
+    <div class="alert alert-danger" role="alert">
+        <%- error %>
+    </div> 
+    <% } %>
+    <% if(success && success.length >0 ) { %> 
+    <div class="alert alert-success" role="alert">
+        <%= success %>
+    </div>
+    <%    } %>
+    
+</div>
+
+
+   

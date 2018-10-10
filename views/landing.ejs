@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script>LUX = window.LUX || {}; LUX.samplerate = 100;</script><script src="https://cdn.speedcurve.com/js/lux.js?id=155414811" async defer></script>        
+        <title>friendsKart</title>
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+          <link rel="shortcut icon" type="image/x-icon" href="/stylesheets/friendship.png" />
+        <link rel="stylesheet" href="/stylesheets/bootstrap.css">
+        <link rel="stylesheet" href="/stylesheets/landing.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js" type="text/javascript" async></script>
+    </head>
+    <body>
+    
+    <div class="container">
+        <% if(error && error.length > 0){ %>
+            <div class="alert alert-danger" role="alert">
+                <%= error %>
+            </div>
+        <% } %>
+        <% if(success && success.length > 0){ %>
+            <div class="alert alert-success" role="alert">
+                <%= success %>
+            </div>
+        <% } %>
+    </div>
+    
+    <div id="landing-header">
+ 		<h1>Welcome to friendsKart!</h1>
+		<a href="/campgrounds" class="btn btn-lg btn-success">View All Products</a>
+		<a href="https:\\unsplash.com"></a>
+    </div>
+    
+    <ul class="slideshow">
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+    </ul>
+
+<% include partials/footer %>

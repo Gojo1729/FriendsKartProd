@@ -1,0 +1,19 @@
+<% include ../partials/header.ejs %>
+<div class="container">
+    <div class="row">
+         <div style="text-align:center">
+             <h1>Product details</h1>
+             <h2>Product name:<%= camp.name %></h2>
+             <h2>Product owner:<%= camp.author.username %></h2>
+             <h2>Price: <%= camp.price %></h2>
+             <h2>Product in sale:<%= seller.sale</h2>
+             
+         </div>
+    </div>
+</div>
+
+<% include ../partials/footer.ejs %>
+
+
+
+<% include ../partials/footer.ejs %> 

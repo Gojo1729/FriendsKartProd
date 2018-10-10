@@ -1,0 +1,85 @@
+ <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+           
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<!-- Button trigger modal -->
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Replies</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <% if(comments && comments.comments.length > 0) { %>
+       <% comments.comments.forEach(function(comment){ %>
+        <hr style="height:2px;background-color:#efefef">
+          <div class="row">
+            <div class="col-md-12">
+               <strong><%= comment.author.username %></strong>
+               <span class="float-right"><%= comment.date.toDateString() %></span>
+                <p>
+                  <%= comment.text %>
+                  <div >
+                  <form action="/product/comment/<%= camp._id %>/viewreplies/<%= comment._id %>" method="GET" style="display:inline">
+                      <% if(comment.comments.length > 0) { %>
+                      <button class="btn btn-link">View Replies(<%= comment.comments.length %>)</button> 
+                     <% } %>
+                  
+                </form>
+               
+                  
+                </p>
+                <% if(nanu && comment.author.id.equals(nanu._id)) { %>
+                <a  class="btn btn-xs btn-link"  href="/campgrounds/<%= camp._id %>/comments/<%= comment._id %>/edit">Edit</a>
+                <form action="/campgrounds/<%= camp._id %>/comments/<%= comment._id %>?_method=DELETE" method="POST" style="display:inline">
+                  <button type="submit" class="btn btn-link" >Delete</button>
+                </form>
+                <% } else if(nanu && nanu.isAdmin){ %>
+          <form action="/campgrounds/<%= camp._id %>/comments/<%= comment._id %>?_method=DELETE" method="POST" style="display:inline">
+                  <button type="submit" class="btn btn-link" >Delete</button> 
+                </form>
+                
+          <% } else if(nanu && !comment.author.id.equals(nanu._id)){ %>
+           <form action="/product/comment/<%= camp._id %>/reply/<%= comment._id %>" method="POST" style="display:inline">
+                  <button class="btn btn-link" style="margin:0 px; padding-top:0 px">Reply</button> 
+                </form>
+          <% } %>     
+                  </div>
+                 
+          <% }); %>
+          
+       <% } %>
+      </div>
+      <div class="modal-footer">
+        
+        <a href="/campgrounds" class="btn btn-primary">Home</a>
+        <a href="/campgrounds/<%= camp._id %>" class="btn btn-secondary" >Close</a>
+      
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"  integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" crossorigin="anonymous"></script>
+<script>
+ $("document").ready(function(){
+    $("#exampleModalLong").modal("show");  
+ });
+   
+</script>
+
+
+
+
+
+
+
+
+
+<% include ../partials/footer.ejs %>

@@ -1,0 +1,51 @@
+<% include ../partials/header.ejs %>
+<script async src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+   
+<% if(loggedUser){ %>
+  
+    <div class="container">
+   
+       <h1><span style="color:red">My</span> favourites</h1>  
+       <h4><span style="color:red"><%= camps.length %></span> favourites</h4>
+       <hr>
+    <div class="response">
+     <div id="responsecontainer">
+            <div class="row  text-center display-flex" style="display:flex; flex-wrap:wrap;">
+          
+               <% camps.forEach(function(camp){ %>
+            <% if(camp.sale ){ %>
+             <div class="col-lg-3 col-xs-6">
+              <a href="/campgrounds/<%= camp._id %>">
+                <div class="thumbnail">
+            <img class="img" src="<%= camp.image %>" >
+        <div class="caption">
+            <h4><%= camp.name %></h4>
+            <h4><span style="color:red"><%= camp.price %></span> &#x20b9</h4>
+     
+        </div>
+      </div>
+              </a>
+       
+       </div>
+   
+     <% } %>
+        
+    <% }); %>
+          
+          
+ 
+        </div>
+    
+    
+    </div>
+    </div>
+       
+    </div>
+	   
+     <% } %>
+
+
+     
+     
+     
+<% include ../partials/footer.ejs %>

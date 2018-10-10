@@ -1,0 +1,21 @@
+<% include ../partials/header.ejs %>
+<div class="container"  style="max-width:450px">
+  
+    <form action="/product/<%= camp._id %>/comments/<%= comment._id %>/reply" method="POST">
+            <h1 style="text-align:center">Add a reply to <%= camp.name %></h1>
+            <div style="margin: 20px auto">
+            <div class="form-group">
+                <input type="text"  class="form-control" name="comments[text]" placeholder="comment">
+            </div>
+         
+            <div class="form-group">
+                <button class="btn  btn-primary btn-lg btn-block">Reply</button>
+            
+    </form>
+ 
+
+
+</div>
+
+
+<% include ../partials/footer.ejs %>
