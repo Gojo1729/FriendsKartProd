@@ -130,7 +130,7 @@ router.get("/refreshindex",isLoggedIn,function(req,res)
        
        if(err)
        {
-           req.flash("error",err.message);
+           req.flash("error","Sorry!!!something went wrong");
            res.redirect("/campgrounds");
        }
        else
@@ -152,7 +152,7 @@ router.get("/getproducts",function(req,res)
        
        if(err)
        {
-           req.flash("error",err.message);
+           req.flash("error","Sorry!!!something went wrong");
            res.redirect("/campgrounds");
        }
        else
@@ -196,7 +196,7 @@ await visualRecognition.classify(params, function(err, response) {
        
         if(err)
         {
-            req.flash("error",err.message);
+            req.flash("error","Sorry!!!something went wrong");
             return res.redirect("back");
         }
         
@@ -214,7 +214,7 @@ await   Camp.create(req.body.camp,function(err,camp)
     { 
         if(err)
         {
-            req.flash("error",err.message);
+            req.flash("error","Sorry!!!something went wrong");
             return res.redirect("back");
         }
          
@@ -246,7 +246,7 @@ await   Camp.create(req.body.camp,function(err,camp)
 	   cloudinary.v2.uploader.upload(req.file.path,{crop: "thumb", width:442, height: 350,quality:"auto",fetch_format:"auto",flags:"lossy" },async (err,result) =>{
         if(err)
         {
-            req.flash("error",err.message);
+            req.flash("error","Sorry!!!something went wrong");
             return res.redirect("back");
         }
         
@@ -264,7 +264,7 @@ await   Camp.create(req.body.camp,function(err,camp)
     { 
         if(err)
         {
-            req.flash("error",err.message);
+            req.flash("error","Sorry!!!something went wrong");
             return res.redirect("back");
         }
          if(categories.indexOf(category) == -1){
@@ -466,7 +466,7 @@ router.put("/campgrounds/:id",isLoggedIn,upload.single("image"), function(req,re
     Camp.findById(req.params.id, async function(err,camp){
         if(err)
         {
-            req.flash("error",err.message);
+            req.flash("error","Sorry!!!something went wrong");
             res.redirect("/campgrounds/"+req.params.id+"/edit");
         }
         else
@@ -518,7 +518,7 @@ await visualRecognition.classify(params, async function(err, response) {
                 }
                 catch(err){
                     
-                     req.flash("error",err.message);
+                     req.flash("error","Sorry!!!something went wrong");
                      return res.redirect("back");
                     
                 }
@@ -579,7 +579,7 @@ router.get("/campgrounds/buy/:id",isLoggedIn,function(req, res) {
                 User.findById(camp.requestedBy,function(err, buyer) {
                           if(err)
                {
-                   req.flash("error",err.message);
+                   req.flash("error","Sorry!!!something went wrong");
                    return res.redirect("/campgrounds");
                }
               
@@ -679,7 +679,7 @@ router.get("/master/users",isLoggedIn,Admin,function(req, res) {
    User.find({},function(err, users) {
        if(err)
        {
-           req.flash("error",err.message);
+           req.flash("error","Sorry!!!something went wrong");
        }
        else{
       res.render("campgrounds/users.ejs",{users:users}); 
@@ -706,19 +706,26 @@ router.get("/campgrounds/buyer/:id",isLoggedIn,function(req, res) {
        {
            
            if( !camp.sale || req.user.isAdmin){
+               console.log("admin");
                camp.save();
            User.findById(camp.author.id,function(err, seller) {
                if(err)
                {
-                   req.flash("error",err.message);
+                   req.flash("error","Sorry!!!something went wrong");
                    res.redirect("/campgrounds");
                }
                else
                {
-                   User.findById(camp.requestedBy,function(err, buyer) {
+                   if(camp.requestedBy)
+                   {
+                       User.findById(camp.requestedBy,function(err, buyer) {
                        if(!err){
                            
 bcrypt.genSalt(saltRounds, function(err, salt) {
+                    if(buyer)
+                    {
+                        
+                    }
                 bcrypt.hash(md5(buyer.username.toString()), salt, function(err, hash_buyer) {
                
                
@@ -757,6 +764,12 @@ bcrypt.genSalt(saltRounds, function(err, salt) {
                        
                     
                    });
+                       
+                   }else
+                   {
+                         res.render("campgrounds/seller.ejs",{buyer_usn:"",camp:camp,buyer:"",seller:seller});
+                   }
+                   
                 
                }
            });
@@ -945,7 +958,7 @@ router.post("/revoke/:id",isLoggedIn,function(req,res)
                    User.findById(camp.author.id,function(err, seller) {
                           if(err)
                {
-                   req.flash("error",err.message);
+                   req.flash("error","Sorry!!!something went wrong");
                    return res.redirect("/campgrounds");
                }
               
@@ -1039,7 +1052,7 @@ router.delete("/campgrounds/:id",isLoggedIn,function(req, res) {
    {
       if(err)
       {
-          req.flash("error",err.message);
+          req.flash("error","Sorry!!!something went wrong");
             res.redirect("back");
       }
       else
@@ -1047,10 +1060,16 @@ router.delete("/campgrounds/:id",isLoggedIn,function(req, res) {
           try
           {
              
-              if(!camp.sale && !req.user.isAdmin)
+              if(!camp.sale)
               {
-                  req.flash("error","Your product is currently being requested by a buyer,check your profile");
+                  req.flash("error","The product is currently being requested,so you can't delete the product");
+                  if(camp.author.id == req.user._id){
                   return res.redirect("/campgrounds/user/"+camp.author.id);
+                  }
+                  else
+                  {
+                          return res.redirect("back");
+                  }
               }
             
               await cloudinary.v2.uploader.destroy(camp.imageId);
@@ -1062,7 +1081,7 @@ router.delete("/campgrounds/:id",isLoggedIn,function(req, res) {
           }
           catch(err)
           {
-              req.flash("error",err.message);
+              req.flash("error","Sorry!!!something went wrong");
               return res.redirect("back");
                 
           }
@@ -1131,7 +1150,7 @@ router.get("/agree/:id",isLoggedIn,function(req, res) {
       if(!camp.sale){
            if(err)
       {
-          req.flash("error",err.message);
+           req.flash("error","Sorry!!!something went wrong");
            return res.redirect("back");
       }
       camp.sold=true;
@@ -1140,7 +1159,7 @@ router.get("/agree/:id",isLoggedIn,function(req, res) {
           User.findById(camp.requestedBy,function(err, buyer) {
                           if(err)
                {
-                   req.flash("error",err.message);
+                   req.flash("error","Sorry!!!something went wrong");
                    return res.redirect("/campgrounds");
                }
               
@@ -1195,7 +1214,7 @@ router.get("/product/accept/:id",isLoggedIn,function(req, res) {
        if(!camp.sale){
        if(err)
        {
-           req.flash("error",err.message);
+           req.flash("error","Sorry!!!something went wrong");
            return res.redirect("back");
        }
        camp.sold=true;
@@ -1203,7 +1222,7 @@ router.get("/product/accept/:id",isLoggedIn,function(req, res) {
                 User.findById(camp.requestedBy,function(err, buyer) {
                           if(err)
                {
-                   req.flash("error",err.message);
+                   req.flash("error","Sorry!!!something went wrong");
                    return res.redirect("/campgrounds");
                }
               
@@ -1275,7 +1294,7 @@ router.get("/product/decline/:id",isLoggedIn,function(req, res) {
    Camp.findById(req.params.id,function(err, camp) {
        if(err)
        {
-           req.flash("error",err.message);
+           req.flash("error","Sorry!!!something went wrong");
            return res.redirect("back");
        }
        camp.sold=false;
@@ -1285,7 +1304,7 @@ router.get("/product/decline/:id",isLoggedIn,function(req, res) {
                    User.findById(camp.author.id,function(err, seller) {
                           if(err)
                {
-                   req.flash("error",err.message);
+                    req.flash("error","Sorry!!!something went wrong");
                    return res.redirect("/campgrounds");
                }
               
@@ -1357,7 +1376,7 @@ router.get("/recieved/:id",isLoggedIn,function(req, res) {
 });
 
 router.delete("/user/:id",isLoggedIn,function(req, res) {
-    
+  
    User.findByIdAndRemove(req.params.id,function(err, user) {
        
       
