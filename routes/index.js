@@ -43,7 +43,7 @@ cloudinary.config({
 router.get("/",function(req,res)
 {
     
-    res.render("landing.ejs");
+    res.redirect("/campgrounds");
     
 });
 

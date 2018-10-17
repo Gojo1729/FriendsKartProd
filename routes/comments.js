@@ -49,7 +49,7 @@ router.get("/product/comment/:cid/viewreplies/:commentid",isLoggedIn,function(re
        if(!err)
        {
            res.render("comments/view.ejs",{camp:camp,comments:comment,nanu:req.user});
-        //   res.send(comment);
+        
        }
    });
       }

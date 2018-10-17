@@ -412,7 +412,8 @@ router.get("/campgrounds/:id/edit",myCampground,function(req, res) {
     }
     else{
         
-        res.send("You are not looged in!!!!");
+         req.flash("error","Please log in");
+               res.redirect("back");
         
     }
    
