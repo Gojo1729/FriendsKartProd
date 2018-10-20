@@ -597,7 +597,7 @@ router.get("/campgrounds/buy/:id",isLoggedIn,function(req, res) {
         subject: 'Your product '+camp.name+" is requested by "+ buyer.profileName ,
         text: 'You are receiving this because someone  have requested your product.\n\n' +
           'Please click on the following link,to find out more in your profile \n\n'+
-          "https://friendskart-shivu1998.c9users.io/campgrounds/user/"+camp.author.id
+          "https://friendskart.mybluemix.net/campgrounds/user/"+camp.author.id
       };
       smtpTransport.sendMail(mailOptions, function(err) {
           if(err)
@@ -976,7 +976,7 @@ router.post("/revoke/:id",isLoggedIn,function(req,res)
         subject:seller.profileName+" ,order for your product "+camp.name+" was cancelled",
         text: 'You are receiving this because the order for the product '+camp.name+' was cancelled by '+buyer.profileName+'\n\n' +
          'So, your product is back on sale, check out your profile for more info\n\n'+
-         "https://friendskart-shivu1998.c9users.io/campgrounds/user/"+seller._id
+         "https://friendskart.mybluemix.net/campgrounds/user/"+seller._id
       };
       smtpTransport.sendMail(mailOptions, function(err) {
           if(err)
@@ -1177,7 +1177,7 @@ router.get("/agree/:id",isLoggedIn,function(req, res) {
         subject: 'Seller of the product '+camp.name+" has accepted to sell. Check your profile for more info ",
         text: 'You are receiving this because the product '+camp.name+' was requested by you and the seller has accepted to sell the product.\n\n' +
           'Please click on the following link,to find out more in your profile \n\n'+
-          "https://friendskart-shivu1998.c9users.io/mykart"
+          "https://friendskart.mybluemix.net/mykart"
       };
       smtpTransport.sendMail(mailOptions, function(err) {
           if(err)
@@ -1240,7 +1240,7 @@ router.get("/product/accept/:id",isLoggedIn,function(req, res) {
         subject: 'Seller of the product '+camp.name+" has accepted to chat with you. Check your profile for more info ",
         text: 'You are receiving this because the product '+camp.name+' was requested by you and the seller has accepted to chat with you.\n\n' +
           'Please click on the following link,to find out more in your profile \n\n'+
-          "https://friendskart-shivu1998.c9users.io/mykart"
+          "https://friendskart.mybluemix.net/mykart"
       };
       smtpTransport.sendMail(mailOptions, function(err) {
           if(err)
@@ -1322,7 +1322,7 @@ router.get("/product/decline/:id",isLoggedIn,function(req, res) {
         subject:buyer.profileName+" ,the product "+camp.name+" which you have ordered was cancelled by the seller "+seller.profileName,
         text: 'You are receiving this because your order for the product '+camp.name+' was cancelled by '+seller.profileName+'\n\n' +
           "click the below link to go to your cart \n\n"+
-         "https://friendskart-shivu1998.c9users.io/campgrounds/mykart"
+         "https://friendskart.mybluemix.net/campgrounds/mykart"
       };
       smtpTransport.sendMail(mailOptions, function(err) {
           if(err)
