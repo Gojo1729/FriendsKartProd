@@ -945,23 +945,27 @@ bcrypt.genSalt(saltRounds, function(err, salt) {
 
 router.post("/revoke/:id",isLoggedIn,function(req,res)
 {
+     
     Camp.findById(req.params.id,function(err, camp) {
-       if(err)
+      if(err)
+      {
+          req.flash("error","Sorry your request couldn't be processed");
+           return res.redirect("/campgrounds");
+      }
+      else
+      {
+       if(camp)
        {
-           req.flash("error","Sorry your request couldn't be processed");
-       }
-       else
-       {
-           camp.sale=true;
-           camp.sold=false;
-           camp.agree = false;
-           User.findById(camp.requestedBy,function(err, buyer) {
-                   User.findById(camp.author.id,function(err, seller) {
+          camp.sale=true;
+          camp.sold=false;
+          camp.agree = false;
+          User.findById(camp.requestedBy,function(err, buyer) {
+                  User.findById(camp.author.id,function(err, seller) {
                           if(err)
-               {
-                   req.flash("error","Sorry!!!something went wrong");
-                   return res.redirect("/campgrounds");
-               }
+              {
+                  req.flash("error","Sorry your request couldn't be processed");
+                  return res.redirect("/campgrounds");
+              }
               
                 var smtpTransport = nodemailer.createTransport({
                     service: 'Gmail', 
@@ -975,6 +979,7 @@ router.post("/revoke/:id",isLoggedIn,function(req,res)
         from: 'friendskarttech@gmail.com',
         subject:seller.profileName+" ,order for your product "+camp.name+" was cancelled",
         text: 'You are receiving this because the order for the product '+camp.name+' was cancelled by '+buyer.profileName+'\n\n' +
+          'Reason for cancellation: '+req.body.reason+'\n\n'+
          'So, your product is back on sale, check out your profile for more info\n\n'+
          "https://friendskart.mybluemix.net/campgrounds/user/"+seller._id
       };
@@ -984,7 +989,7 @@ router.post("/revoke/:id",isLoggedIn,function(req,res)
               req.flash("error","Failed to send a mail to buyer");
               return res.redirect("/campgrounds");
           }
-      
+       
        
        
       });
@@ -994,11 +999,18 @@ router.post("/revoke/:id",isLoggedIn,function(req,res)
                     
                 });
         
-           camp.requestedBy = "";
-           camp.save();
+          camp.requestedBy = "";
+          camp.save();
             req.flash("success","We have notified the seller that you have cancelled the order to buy the product");
-           res.redirect("back");
+            return res.redirect("/campgrounds");
+       
+       }else
+       {
+            req.flash("error","Sorry!!!,something went wrong.");
+            return res.redirect("/campgrounds");
+           
        }
+      }
     });
     
 });
@@ -1121,7 +1133,7 @@ router.get("/campgrounds/user/:id",isLoggedIn,function(req, res) {
           
        }
        
-   });
+   }).sort({sale:1});
    
     
 });
@@ -1132,19 +1144,18 @@ router.get("/campgrounds/user/:id/refresh",isLoggedIn,function(req, res) {
    {
        if(err)
        {
-          req.flash("error","Sorry!!!something went wrong");
-            res.redirect("back");
+            req.flash("error","Sorry something went wrong");
+          res.redirect("/campgrounds");
        }
        else
        {
            res.render("campgrounds/products_refresh.ejs",{camps:camps});
        }
        
-   });
+   }).sort({sale:1});
    
     
 });
-
 router.get("/agree/:id",isLoggedIn,function(req, res) {
    
    Camp.findById(req.params.id,function(err, camp) {
@@ -1290,24 +1301,51 @@ router.post("/cancel_request/:id",isLoggedIn,function(req,res)
 router.get("/terms",function(req, res) {
     res.render("campgrounds/terms.ejs");
 })
+
+router.post("/reason/:id",isLoggedIn,function(req,res){
+    Camp.findById(req.params.id,function(err,product)
+    {
+        if(err)
+        {
+             req.flash("error","Sorry!!!,something went wrong.");
+             return res.redirect("/campgrounds");
+        }else
+        {
+            if((product.requestedBy == req.user._id.toString()) || (product.author.id == req.user._id.toString()))
+            {
+                 res.render("reason.ejs",{pid:req.params.id,product:product}); 
+            }else
+            {
+                 req.flash("error","Sorry!!!,you are not allowed here");
+                 return res.redirect("/campgrounds");
+            }
+        }
+        
+    });
+  
+});
+
 router.get("/product/decline/:id",isLoggedIn,function(req, res) {
+    
      req.flash("success","We have notified the buyer that you have cancelled his order");
-   Camp.findById(req.params.id,function(err, camp) {
-       if(err)
-       {
-           req.flash("error","Sorry!!!something went wrong");
-           return res.redirect("back");
-       }
-       camp.sold=false;
-       camp.sale=true;
-       camp.agree = false;
+  Camp.findById(req.params.id,function(err, camp) {
+      if(err)
+      {
+           req.flash("error","Sorry something went wrong");
+          return res.redirect("back");
+      }
+      if(camp)
+      {
+          camp.sold=false;
+      camp.sale=true;
+      camp.agree = false;
           User.findById(camp.requestedBy,function(err, buyer) {
-                   User.findById(camp.author.id,function(err, seller) {
+                  User.findById(camp.author.id,function(err, seller) {
                           if(err)
-               {
-                    req.flash("error","Sorry!!!something went wrong");
-                   return res.redirect("/campgrounds");
-               }
+              {
+                   req.flash("error","Sorry something went wrong");
+                  return res.redirect("/campgrounds");
+              }
               
                 var smtpTransport = nodemailer.createTransport({
                     service: 'Gmail', 
@@ -1321,6 +1359,7 @@ router.get("/product/decline/:id",isLoggedIn,function(req, res) {
         from: 'friendskarttech@gmail.com',
         subject:buyer.profileName+" ,the product "+camp.name+" which you have ordered was cancelled by the seller "+seller.profileName,
         text: 'You are receiving this because your order for the product '+camp.name+' was cancelled by '+seller.profileName+'\n\n' +
+        'reason for cancellation :'+req.query.reason +'\n'+
           "click the below link to go to your cart \n\n"+
          "https://friendskart.mybluemix.net/campgrounds/mykart"
       };
@@ -1330,7 +1369,7 @@ router.get("/product/decline/:id",isLoggedIn,function(req, res) {
               req.flash("error","Failed to send a mail to buyer");
               return res.redirect("/campgrounds");
           }
-    
+        
        
        
       });
@@ -1341,11 +1380,13 @@ router.get("/product/decline/:id",isLoggedIn,function(req, res) {
                 });
         
        
-       camp.requestedBy = "";
-       camp.save();
-       res.redirect("/campgrounds");
+      camp.requestedBy = "";
+      camp.save();
+      res.redirect("/campgrounds");
+           
+      }
        
-   })
+  });
     
 });
 

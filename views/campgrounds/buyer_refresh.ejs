@@ -10,7 +10,10 @@
              <% if(!camp.sold){ %>
              <h3>Someone has requested your product, accept the request to chat with the Buyer</h3>
              <a href="/product/accept/<%= camp._id %>" class="btn btn-success">Accept the request</a>
-             <a href="/product/decline/<%= camp._id %>" class="btn btn-danger">Delete the request</a>
+            <form  class="form-action" action="/reason/<%= camp._id %>" method="post" style="display:inline">
+               <button class="btn btn-danger">Delete the request</a>
+             </form>
+            
              <% } else {%>
                     <label ><h3>Click below to chat with buyer???</h3></label>
                     

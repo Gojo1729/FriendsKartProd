@@ -22,7 +22,7 @@
             <h4><%= camp.name %></h4> 
             <% if(!camp.recieved && !camp.money) { %>
             <% if(!camp.money) { %>
-             <form action="/revoke/<%= camp._id %>" method="POST" style="display:inline"> 
+             <form action="/reason/<%= camp._id %>" method="POST" style="display:inline"> 
                 <button class="btn btn-danger " style="margin-bottom:5px">Cancel Order</button>
             </form>
             <% } %>

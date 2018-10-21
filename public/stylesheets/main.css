@@ -5,8 +5,13 @@
      border: none;
      border-radius: 10px; 
       
-     
     
+}
+
+#logo
+{
+  width: 64px;
+  height: 64px;
 }
 
 
