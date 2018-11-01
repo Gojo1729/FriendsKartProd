@@ -30,7 +30,10 @@
         
       <%    }else if(camp.sold && !camp.sale && !camp.recieved && !camp.agree){ %>
        <label >You have accepted to chat with the buyer</label>
-        <a href="/product/decline/<%= camp._id %>" class="btn btn-danger">Cancel request</a>
+          <form  class="form-action" action="/reason/<%= camp._id %>" method="post" style="display:inline">
+               <button class="btn btn-danger">Cancel Request</button>
+             </form>
+            
        <a href="/campgrounds/sell/<%= camp._id %>" class="btn btn-warning btn">More info</a>
            <% } else if(camp.recieved){ %>
            <label>Product recieved by the buyer</label>
@@ -40,7 +43,10 @@
            <% } else if(camp.agree){ %>
                <label>You have agreed to sell your product</label>
                <% if(!camp.recieved && !camp.money) { %>
-                 <a href="/product/decline/<%= camp._id %>" class="btn btn-danger">Delete the request</a>
+                  <form  class="form-action" action="/reason/<%= camp._id %>" method="post" style="display:inline">
+               <button class="btn btn-danger">Cancel Request</button>
+             </form>
+            
                <% } %>
               
        <a href="/campgrounds/sell/<%= camp._id %>" class="btn btn-warning btn">More info</a>
@@ -73,7 +79,7 @@
 
   
   function fetch(){
-      console.log("inside fetch");
+    
         $.ajax({
            
            url:"https://friendskart.mybluemix.net/campgrounds/user/<%= loggedUser._id %>/refresh",

@@ -2,6 +2,8 @@ var express = require("express");
 var router = express.Router();
 var Camp = require("../models/campground");
 var compression = require('compression');
+var Review = require("../models/review");
+var User = require("../models/user")
 router.use(compression());
 
 
@@ -51,7 +53,39 @@ router.get("/products/specific/:catid",isLoggedIn,function(req,res){
     
 });
 
+router.get("/sellerReviews/:rid",isLoggedIn,function(req,res)
+{
+   
+   Review.find({"owner":req.params.rid.toString()}).populate("product").exec(function(err,reviews)
+   {
+       Review.count({"buyer":req.user._id},function(err,count){
+            if(reviews)
+       {
+       res.render("category/sellerReviews.ejs",{reviews:reviews,count:count});
+       }
+       })
+      
+       
+   });
+    
+});
 
+router.get("/recommendations",isLoggedIn,function(req,res)
+{
+   
+    User.findById(req.user._id,function(err, user) {
+        if(!err)
+        {
+             Camp.find({"category":{$in:[global.interestedCategory[0],global.interestedCategory[1]]},"author.id":{$ne:req.user._id}},function(err, products) {
+                      if(!err)
+                      {
+                         res.render("campgrounds/search.ejs",{camps:products,key:null});
+                      }
+                       
+                   });
+        }
+    })
+});
 router.get("/product/add/fav/:id",isLoggedIn,function(req,res){
    
    Camp.findById(req.params.id,function(err,product)

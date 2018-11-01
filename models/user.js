@@ -16,7 +16,14 @@ var userSchema = new mongoose.Schema({
    verifyToken:String,
    verfiyExpiry:Date,
    phoneNo:{type:Number,unique:true,required:true},
-   created:{type:Date,default:Date.now}
+   created:{type:Date,default:Date.now},
+    viewed:[
+      {type:mongoose.Schema.Types.ObjectId,
+       ref:"Camp"}
+      ],
+      interested:[{category:String,count:{type:Number,default:0}}],
+      recommendations:[{category:String,count:{type:Number,default:0}}],
+      review:[{type:mongoose.Schema.Types.ObjectId,ref:"Review"}]
   
 });
 

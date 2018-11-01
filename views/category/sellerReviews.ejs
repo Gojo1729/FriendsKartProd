@@ -1,0 +1,61 @@
+<% include ../partials/header.ejs %>
+<script async src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+
+  <div class="container">
+    <h1>User<span class="red"> Reviews</span></h1>
+    <h4>You have <span class="red"><%= count %></span> transactions with this seller</h4>
+    
+        <div >
+                <% reviews.forEach(function(review){ %>
+                <% if(review.product) { %>
+                <div class="row">
+      
+      <div class="col-lg-2 col-md-4 col-xs-6">
+
+  <img class="img" style="max-height:160px;margin-left:10px;max-width:150px;margin-right:0px" src="<%= review.product.image %>" >
+
+       
+
+      
+      </div>
+      <div class="col-lg-2 col-md-2 col-xs-6">
+        <div class="row">
+         <h4 style="max-lines:2;float:left; text-overflow: ellipsis;margin:0px;">Product:<span class="red"><%= review.product.name %></span></h4>  
+        </div>
+         <div class="row">
+         <h4 style="max-lines:2;float:left; text-overflow: ellipsis;margin:0px">Review:<span class="red"><%= review.review %></span></h4>     
+         </div>
+         <div class="row">
+         <div>
+           <% for(var i=0;i<review.stars;i++) { %>
+           
+            <img src="../stylesheets/gold.png">
+           <% } %>
+           
+                    
+         </div>  
+         </div>
+         
+       
+      </div>
+            
+       </div>
+              <% }  %>
+              <hr>
+    
+    </div>       
+             
+   
+   
+        
+    <% }); %>
+          
+         </div>
+    
+         
+
+
+
+
+<% include ../partials/footer.ejs %> 

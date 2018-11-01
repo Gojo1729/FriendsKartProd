@@ -11,6 +11,7 @@ var fs = require('fs');
 var md5 = require("md5")
 var bcrypt = require("bcrypt");
 const saltRounds = 10;
+var Review = require("../models/review")
 const visualRecognition = new VisualRecognitionV3({
 	
 	url: process.env.url,
@@ -21,8 +22,7 @@ const visualRecognition = new VisualRecognitionV3({
 });
 
 var categories = [];
-
-
+global.interestedCategory;
 router.use(compression());
 
 var stats={
@@ -111,11 +111,39 @@ router.get("/campgrounds",function(req,res)
     {
         if(err)
         {
-           req.flash("error","Sorry!!!something went wrong");
+             req.flash("error","Sorry!!!something went wrong");
             res.redirect("back");
         }
         else{
-            res.render("campgrounds/index.ejs",{camps:camps});
+            
+                if(req.user && req.user.interested.length >= 1 ){
+                 
+                    interestedCategory = [];
+                  
+                   if(req.user.interested.length >=2){
+                    interestedCategory[0]=req.user.interested[req.user.interested.length-1].category;
+                   interestedCategory[1]=req.user.interested[req.user.interested.length-2].category;   
+                   }
+                   else if(req.user.interested.length ==1 )
+                   { 
+                       interestedCategory[0]=req.user.interested[req.user.interested.length-1].category;
+                       interestedCategory[1]=req.user.interested[req.user.interested.length-1].category;
+                   }
+                     console.log("cat"+interestedCategory); 
+                   Camp.find({"category":{$in:[interestedCategory[0],interestedCategory[1]]},"author.id":{$ne:req.user._id}},function(err, products) {
+                      if(!err)
+                      {
+                         res.render("campgrounds/index.ejs",{camps:camps,products:products});
+                      }
+                       
+                   }).limit(6);
+                 
+                }else
+                {
+                    res.render("campgrounds/index.ejs",{camps:camps,products:null});
+                }
+                
+                            
         }
         
     }).sort({"_id":-1});
@@ -124,6 +152,32 @@ router.get("/campgrounds",function(req,res)
     
   
 });
+router.post("/reason/:id",isLoggedIn,function(req,res){
+    Camp.findById(req.params.id,function(err,product)
+    {
+        if(err)
+        {
+             req.flash("error","Sorry!!!,something went wrong.");
+             return res.redirect("/campgrounds");
+        }else
+        {
+            if((product.requestedBy == req.user._id.toString()) || (product.author.id == req.user._id.toString()))
+            {
+                 res.render("reason.ejs",{pid:req.params.id,product:product}); 
+            }else
+            {
+                 req.flash("error","Sorry!!!,you are not allowed here");
+                 return res.redirect("/campgrounds");
+            }
+        }
+        
+    });
+  
+});
+
+
+
+
 router.get("/refreshindex",isLoggedIn,function(req,res)
 {
     Camp.find({},function(err, camps) {
@@ -343,18 +397,58 @@ router.get("/campgrounds/:id",isLoggedIn,function(req,res)
                    }
                    else
                    {
+                       var j=0;
+                       if(req.user.interested.length == 0)
+                       {
+                           var data = {"category":camp.category,"count":1};
+                                      req.user.interested.push(data);
+                                      req.user.save();
+                                      console.log("illa"+req.user.interested);
+                       }else{
+                           for(var i=0;i<req.user.interested.length;i++)
+                           {
+                               if(req.user.interested[i].category != camp.category)
+                               {
+                                   j=1;
+                               }
+                               else
+                               {
+                                   j=0;
+                                   req.user.interested[i].count+=1;
+                                   req.user.save();
+                                   console.log("ide"+req.user.interested);
+                                   break;
+                                     
+                               }
+                           }
+                           if(j==1)
+                              {
+                                 
+                                      
+                                      data = {"category":camp.category,"count":1};
+                                      req.user.interested.push(data);
+                                      req.user.save();
+                                      console.log("illa"+req.user.interested);
+                              }
+                       
+                       
+                       }
+                       req.user.interested.sort({"category":1});
+                       if(req.user.viewed.indexOf(camp._id) == -1)
+                           {
+                               req.user.viewed.push(camp._id);
+                             
+                           }
                        if(user)
                        {
-                          
+                         
                             res.render("campgrounds/show.ejs",{camp:camp,nanu:req.user,fav:true});
-                           
-                            
+                    
                        }
                        else
                        {
-                           
+                            
                              res.render("campgrounds/show.ejs",{camp:camp,nanu:req.user,fav:false});
-                               
                           
                        }
                    }
@@ -413,7 +507,7 @@ router.get("/campgrounds/:id/edit",myCampground,function(req, res) {
     else{
         
          req.flash("error","Please log in");
-               res.redirect("back");
+               res.redirect("back")
         
     }
    
@@ -668,7 +762,7 @@ router.get("/mykart",isLoggedIn,function(req, res) {
             res.render("campgrounds/mykart.ejs",{camps:camps});
                 
        }
-   });
+   })
   
     
 });
@@ -695,7 +789,7 @@ router.get("/master/users",isLoggedIn,Admin,function(req, res) {
 });
 
 router.get("/campgrounds/buyer/:id",isLoggedIn,function(req, res) {
-   
+   var stars=0;
    Camp.findById(req.params.id,function(err,camp)
    {
        if(err)
@@ -707,7 +801,7 @@ router.get("/campgrounds/buyer/:id",isLoggedIn,function(req, res) {
        {
            
            if( !camp.sale || req.user.isAdmin){
-               console.log("admin");
+            
                camp.save();
            User.findById(camp.author.id,function(err, seller) {
                if(err)
@@ -720,13 +814,10 @@ router.get("/campgrounds/buyer/:id",isLoggedIn,function(req, res) {
                    if(camp.requestedBy)
                    {
                        User.findById(camp.requestedBy,function(err, buyer) {
-                       if(!err){
+                       if(!err && buyer){
                            
 bcrypt.genSalt(saltRounds, function(err, salt) {
-                    if(buyer)
-                    {
-                        
-                    }
+                  
                 bcrypt.hash(md5(buyer.username.toString()), salt, function(err, hash_buyer) {
                
                
@@ -737,13 +828,25 @@ bcrypt.genSalt(saltRounds, function(err, salt) {
                 bcrypt.hash(md5(seller.username.toString()), salt, function(err, hash_seller) {
               
              
-                    bcrypt.compare(md5(seller.username.toString()), hash_seller).then(function(result) {
-                  
+                      bcrypt.compare(md5(seller.username.toString()), hash_seller).then(function(result) {
+                    // res == true
+                    Review.find({"owner":camp.author.id.toString()},function(err, reviews) {
+                        if(reviews)
+                        {
+                            reviews.forEach(function(review){
+                               stars+=review.stars;
+                            });
+                           
+                             res.render("campgrounds/seller.ejs",{buyer_usn:hash_buyer,camp:camp,buyer:buyer,seller:seller,stars:stars/reviews.length});    
+                        }
+                   
+                     
+                    });
                     
-                     res.render("campgrounds/seller.ejs",{buyer_usn:hash_buyer,camp:camp,buyer:buyer,seller:seller});
                     
                       
                     });
+                
                 
                 });
             
@@ -777,7 +880,7 @@ bcrypt.genSalt(saltRounds, function(err, salt) {
            
            }else
            {
-               req.flash("error","Product cannot be found");
+               req.flash("error","Product cannot be found or was cancelled");
                return res.redirect("back");
            }
            
@@ -787,7 +890,17 @@ bcrypt.genSalt(saltRounds, function(err, salt) {
    
     
 });
-
+router.get("/review/:pid",function(req,res)
+{
+    Camp.findOne({"_id":req.params.pid,"requestedBy":req.user._id},function(err, product) {
+        if(product){
+         res.render("campgrounds/review.ejs",{id:req.params.pid,product:product});   
+       
+        }
+        
+    })
+    
+});
 router.get("/campgrounds/sell/refresh/:id",isLoggedIn,function(req, res) {
     var Buyer = new User();
     Camp.findById(req.params.id,function(err, camp) {
@@ -950,7 +1063,6 @@ router.post("/revoke/:id",isLoggedIn,function(req,res)
       if(err)
       {
           req.flash("error","Sorry your request couldn't be processed");
-           return res.redirect("/campgrounds");
       }
       else
       {
@@ -963,7 +1075,7 @@ router.post("/revoke/:id",isLoggedIn,function(req,res)
                   User.findById(camp.author.id,function(err, seller) {
                           if(err)
               {
-                  req.flash("error","Sorry your request couldn't be processed");
+                  req.flash("error",err.message);
                   return res.redirect("/campgrounds");
               }
               
@@ -992,6 +1104,7 @@ router.post("/revoke/:id",isLoggedIn,function(req,res)
        
        
        
+       
       });
                     
                 })
@@ -1014,6 +1127,7 @@ router.post("/revoke/:id",isLoggedIn,function(req,res)
     });
     
 });
+
 
 router.get("/master/stats",isLoggedIn,Admin,function(req, res) {
    
@@ -1144,18 +1258,19 @@ router.get("/campgrounds/user/:id/refresh",isLoggedIn,function(req, res) {
    {
        if(err)
        {
-            req.flash("error","Sorry something went wrong");
-          res.redirect("/campgrounds");
+          req.flash("error","Sorry!!!something went wrong");
+            res.redirect("back");
        }
        else
        {
            res.render("campgrounds/products_refresh.ejs",{camps:camps});
        }
        
-   }).sort({sale:1});
+   });
    
     
 });
+
 router.get("/agree/:id",isLoggedIn,function(req, res) {
    
    Camp.findById(req.params.id,function(err, camp) {
@@ -1301,38 +1416,14 @@ router.post("/cancel_request/:id",isLoggedIn,function(req,res)
 router.get("/terms",function(req, res) {
     res.render("campgrounds/terms.ejs");
 })
-
-router.post("/reason/:id",isLoggedIn,function(req,res){
-    Camp.findById(req.params.id,function(err,product)
-    {
-        if(err)
-        {
-             req.flash("error","Sorry!!!,something went wrong.");
-             return res.redirect("/campgrounds");
-        }else
-        {
-            if((product.requestedBy == req.user._id.toString()) || (product.author.id == req.user._id.toString()))
-            {
-                 res.render("reason.ejs",{pid:req.params.id,product:product}); 
-            }else
-            {
-                 req.flash("error","Sorry!!!,you are not allowed here");
-                 return res.redirect("/campgrounds");
-            }
-        }
-        
-    });
-  
-});
-
 router.get("/product/decline/:id",isLoggedIn,function(req, res) {
-    
+ 
      req.flash("success","We have notified the buyer that you have cancelled his order");
   Camp.findById(req.params.id,function(err, camp) {
       if(err)
       {
-           req.flash("error","Sorry something went wrong");
-          return res.redirect("back");
+           req.flash("error","Sorry,Product not available");
+           return res.redirect("back");
       }
       if(camp)
       {
@@ -1343,7 +1434,7 @@ router.get("/product/decline/:id",isLoggedIn,function(req, res) {
                   User.findById(camp.author.id,function(err, seller) {
                           if(err)
               {
-                   req.flash("error","Sorry something went wrong");
+                  req.flash("error",err.message);
                   return res.redirect("/campgrounds");
               }
               
@@ -1369,7 +1460,6 @@ router.get("/product/decline/:id",isLoggedIn,function(req, res) {
               req.flash("error","Failed to send a mail to buyer");
               return res.redirect("/campgrounds");
           }
-        
        
        
       });
@@ -1390,8 +1480,9 @@ router.get("/product/decline/:id",isLoggedIn,function(req, res) {
     
 });
 
-router.get("/money/:id",isLoggedIn,function(req, res) {
-   
+
+router.get("/money/:id",isLoggedIn,function(req, res) 
+   {
    Camp.findById(req.params.id,function(err, camp) {
       
       camp.money=true;
@@ -1404,18 +1495,43 @@ router.get("/money/:id",isLoggedIn,function(req, res) {
 });
 
 
-router.get("/recieved/:id",isLoggedIn,function(req, res) {
-   
-   Camp.findById(req.params.id,function(err, camp) {
-      
-      camp.recieved=true;
-      camp.save();
-      res.redirect("/mykart");
-      
+router.get("/recieved/:pid",function(req, res) {
+    Camp.findById(req.params.pid,function(err, product) {
+        if(product && !err){
+              User.findById(product.author.id,function(err, user) {
+                  if(user && !err)
+                  {
+                        
+                  
+                    var data = {"stars":req.query.stars,"review":req.query.review,"owner":user._id,"buyer":req.user._id,"product":product};
+                    
+                    Review.create(data,function(err, review) {
+                      
+                       user.review.push(review);
+                       
+                       
+                         user.save();
+                    });
+                    
+                      product.recieved=true;
+                      product.save();
+                      res.redirect("/mykart");
+                  }
+              })
+        }else
+        {
+             req.flash("error","Sorry,something went wrong");
+             return res.redirect("/campgrounds");
+        }
+     
+        
+    })
+  
        
-   });
+
     
 });
+
 
 router.delete("/user/:id",isLoggedIn,function(req, res) {
   

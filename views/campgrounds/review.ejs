@@ -1,0 +1,88 @@
+
+ <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+           
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<!-- Button trigger modal -->
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Please review the order</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+                 <div class="row">
+            <div class="col-md-12">
+                 
+                <% if(loggedUser && product) { %>
+           
+                <form action="/recieved/<%= product._id %>" method="get">
+                   
+            <div class="form-group">
+                  <div>
+                <h3>Rate The Seller</h3>
+                <input type="hidden" name="stars" id="stars" >
+                    <img  onclick="addColor(1)" name="star[1]" id="1" src="../stylesheets/white-star.png">
+                     <img onclick="addColor(2)" name="star[2]" id="2" src="../stylesheets/white-star.png">
+                      <img  onclick="addColor(3)" name="star[3]" id="3" src="../stylesheets/white-star.png">
+                       <img onclick="addColor(4)" name="star[4]" id="4" src="../stylesheets/white-star.png">
+                        <img  onclick="addColor(5)" name="star[5]" id="5" src="../stylesheets/white-star.png">    
+                    </div>
+                    
+              <textarea class="form-control" rows="5" name="review" placeholder="share your experience..."></textarea>  
+            </div>        
+              
+              
+              <div>
+               <input class="btn btn-primary" type="submit" value="Submit">   
+              </div>
+                </form>
+                <% } %>
+             
+      </div>
+      <div class="modal-footer">
+        
+       
+      
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"  integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" crossorigin="anonymous"></script>
+<script>
+ $("document").ready(function(){
+    $("#exampleModalLong").modal("show");  
+ });
+ 
+ function addColor(id)
+ {
+     console.log("change")
+     for(var i=1;i<id+1;i++)
+     {
+          console.log(document.getElementById(i).src)
+          document.getElementById(i).src = "https://friendskart-shivu1998.c9users.io/stylesheets/gold.png"
+       
+     }
+     for(var i=id+1;i<=5;i++)
+     {
+           document.getElementById(i).src = "https://friendskart-shivu1998.c9users.io/stylesheets/white-star.png"
+     }
+     
+     document.getElementById("stars").value = id;
+     console.log( document.getElementById("stars").value)
+ }
+   
+</script>
+
+
+
+
+
+<% include ../partials/footer.ejs %>

@@ -2,8 +2,11 @@
 <div class="container">
     <div class="row">
          <div style="text-align:center">
-             <h1>Product details</h1>
-             <h2>Seller Id:<%= seller.username %></h2>
+             <h1>Product <span class="red">details</span></h1>
+             <h2>Seller Id:<span class="red"><%= seller.username %></span></h2>
+              <a href="/sellerReviews/<%= seller._id %>" class="red">View reviews on the seller</a>  
+             <h2>Seller Ratings:<span class="red"><%= stars.toFixed(1) %></span></h2>
+           
              <% if(loggedUser && loggedUser.isAdmin){ %>
                 <% if(!camp.sale && !camp.agree){ %>
                         <h2>Requested by:<%= buyer.username %></h2>
@@ -16,10 +19,12 @@
              <% } %>
             
              <img src=""/>
-             <% if(!camp.sale && !loggedUser.isAdmin){ %>
+             <% if(loggedUser){ %>
+             
+              <% if(!camp.sale && !loggedUser.isAdmin){ %>
              <% if(camp.sold) { %>
                <label><h3>Seller has accepted to chat with you , contact the person before proceeding.</h3></label>
-                <label ><h3>Click below to chat with your seller???</h3></label>
+                <label ><h3>Click below to chat with your seller</h3></label>
                 <form action="http://vijethvk11-com.stackstaging.com/chat/login.php" method="POST">
                     <input type="submit" value="Chat" class="btn btn-success" >
                     <input type="hidden" value="Seller" name="Seller">
@@ -30,7 +35,7 @@
                     <% if(camp.agree && !camp.recieved){ %>
                      <label><h3>Click yes whenever you recieve the product</h3></label>
                      <div>
-              <a href="/recieved/<%=camp._id %>" class="btn btn-success">Yes</a>
+              <a href="/review/<%=camp._id %>" class="btn btn-success">Yes</a>
                 <a href="/mykart" class="btn btn-danger">No</a>
              </div>
                     <% } %>
@@ -45,9 +50,12 @@
            
             
              <% } %>
+             <% } %>
+            
          </div>
     </div>
 </div>
 
 <% include ../partials/footer.ejs %>
+
 

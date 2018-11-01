@@ -22,9 +22,9 @@
             <h4><%= camp.name %></h4> 
             <% if(!camp.recieved && !camp.money) { %>
             <% if(!camp.money) { %>
-             <form action="/reason/<%= camp._id %>" method="POST" style="display:inline"> 
-                <button class="btn btn-danger " style="margin-bottom:5px">Cancel Order</button>
-            </form>
+              <form  class="form-action" action="/reason/<%= camp._id %>" method="post" style="display:inline">
+               <button class="btn btn-danger">Cancel Request</button>
+             </form>
             <% } %>
            
              <a href="/campgrounds/buyer/<%= camp._id %>" class="btn btn-primary">More info</a>

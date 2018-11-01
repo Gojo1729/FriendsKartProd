@@ -9,8 +9,12 @@
 <% if(loggedUser){ %>
    <% if(!loggedUser.isAdmin){ %>
     <div class="container">
-  <h1 >Search results for <span id="key">"<%= key %>"</span></h1>
-  <h3>Showing <%= camps.length %> results</h3>
+        <% if(key != null) { %>
+         <h1 >Search results for <span id="key">"<%= key %>"</span></h1>      
+        <% } else { %>
+        <h1>Your <span id="key">Recommendations</span></h1>      
+        <% } %>
+  <h3>Showing <span id="key"><%= camps.length %></span> results</h3>
     <div class="response">
      <div id="responsecontainer">
             <div class="row  text-center display-flex" style="display:flex; flex-wrap:wrap;">
