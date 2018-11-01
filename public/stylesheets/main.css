@@ -7,7 +7,14 @@
       
     
 }
-
+.red
+{
+  color:red;
+}
+#rec
+{
+  max-height:100px; 
+}
 #logo
 {
   width: 64px;

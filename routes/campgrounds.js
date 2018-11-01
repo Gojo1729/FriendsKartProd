@@ -668,7 +668,7 @@ router.get("/mykart",isLoggedIn,function(req, res) {
             res.render("campgrounds/mykart.ejs",{camps:camps});
                 
        }
-   })
+   });
   
     
 });
