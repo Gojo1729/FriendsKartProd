@@ -1,4 +1,6 @@
 <% include ../partials/header.ejs %>
+<link rel="stylesheet" href="../stylesheets/chat.css">
+  <script data-main="../js/chat.js" src="../node_modules/require.js"></script>
 <style>
    @media(min-width: 40em) {
         #hide {
@@ -10,7 +12,28 @@
     #key{
         color:red;
     }
+    {box-sizing: border-box;}
 
+/* Button used to open the chat form - fixed at the bottom of the page */
+
+.btn-circle {
+    width: 60px;
+    height: 60px;
+    padding: 6px 0px;
+    border-radius: 25px;
+    text-align: center;
+    font-size: 12px;
+    line-height: 1.42857;
+}
+.chiku
+{
+ position:fixed;
+ right:0;
+ bottom:0;
+ z-index:10;
+ margin-right:10px;
+ margin-bottom:20px;
+}
 </style>
 <script async src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
    
@@ -38,6 +61,32 @@
          </div>
        </form>
       </p>
+      
+ <div class="chatbubble">
+        <div class="unexpanded">
+            <div class="title" style="color:white;text-align:center">Need help?Chat with chiku here!!!</div>
+        </div>
+        <div class="expanded chat-window">
+          <div class="chats">
+            
+            <ul class="messages clearfix">
+               
+            </ul>
+           
+            <div class="input">
+              <form class="form-inline" id="messageSupport">
+                <div class="form-group">
+                  <input type="text" autocomplete="off" class="form-control" id="newMessage" placeholder="Enter Message" required>
+                   <input type="hidden" id="name" value=<%= loggedUser.profileName %>>
+                </div>
+                 <button style="float:right" id="submit" type="submit" class="btn btn-primary ">Send</button>
+              </form>
+            </div>
+          </div>
+        </div>
+    </div>
+    
+       
      
     <% if(products && products.length > 1 ) { %>
     <h4><span id="key">Your</span> Recommendations</h4>
@@ -62,7 +111,7 @@
       <% }) %>
     </div>
     <hr>
-    <a href="/recommendations">View More</a>
+    <a href="/recommendations" >View More</a>
     <hr>
      </div>
     <% } %>
@@ -70,6 +119,7 @@
     
     
     <hr>
+    
     <div class="response">
      <div id="responsecontainer">
             <div class="row  text-center display-flex" style="display:flex; flex-wrap:wrap;">
@@ -217,7 +267,7 @@
        
     </div>
      <% } %>
-
+ <script src="../js/bundle.js"></script>
      <script>
 
 
@@ -225,7 +275,7 @@
  function fetch_user()
  {
   $.ajax({
-   url:"https://friendskart.mybluemix.net/getproducts",
+   url:"https://friendskart-shivu1998.c9users.io/getproducts",
    type:"GET",
    datatype:"json",
    success:function(data){
@@ -234,6 +284,7 @@
    }
   })
  }
+ 
  setInterval('fetch_user()', 1000);
 
   

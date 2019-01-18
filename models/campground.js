@@ -4,7 +4,7 @@ var mongoose = require("mongoose");
 var Comment = require("../models/comments");
 
 var campGroundSchema = new mongoose.Schema({
-   name:String,
+   name:{type:String,index:true},
    image:String,
    imageId:String,
    description:String,
@@ -44,5 +44,5 @@ campGroundSchema.pre('remove', function(next) {
    
     next();
 });
-
+campGroundSchema.index({"$**":"text"});
 module.exports = mongoose.model("Camp",campGroundSchema);

@@ -70,6 +70,45 @@ router.get("/sellerReviews/:rid",isLoggedIn,function(req,res)
     
 });
 
+router.get("/chatbot",function(req,res)
+{
+    
+    res.render("category/chat.ejs",{name:req.user.profileName});
+    
+});
+
+router.post("/botsearch",function(req,res)
+{
+          if(req.body.key)
+          {
+              
+        Camp.find({$text:{$search:req.body.key}},{score:{$meta:"textScore"}},function(err,prods)
+        {
+          
+          res.send(prods);
+            
+        }).sort({score:{$meta:"textScore"}});
+    
+          }
+          else
+          {
+                Camp.find({$and:[{"price":{$gte:req.body.val1}},{"price":{$lte:req.body.val2}}]},function(err,prods)
+        {
+          
+          res.send(prods);
+            
+        });
+    
+              
+          }
+});
+
+
+function escapeRegex(text) {
+    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+};
+
+
 router.get("/recommendations",isLoggedIn,function(req,res)
 {
    

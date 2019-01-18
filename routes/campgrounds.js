@@ -11,7 +11,9 @@ var fs = require('fs');
 var md5 = require("md5")
 var bcrypt = require("bcrypt");
 const saltRounds = 10;
+var natural = require("natural")
 var Review = require("../models/review")
+var path = require("path");
 const visualRecognition = new VisualRecognitionV3({
 	
 	url: process.env.url,
@@ -79,12 +81,33 @@ router.get("/upload",isLoggedIn,function(req,res)
 });
 
 
-
+router.get("/test",function(req, res) {
+//     var tokenizer = new natural.WordTokenizer();
+// console.log(tokenizer.tokenize("your dog has fleas."));
+var base_folder = path.join(path.dirname(require.resolve("natural")), "brill_pos_tagger");
+var rulesFilename = base_folder + "/data/English/tr_from_posjs.txt";
+var lexiconFilename = base_folder + "/data/English/lexicon_from_posjs.json";
+var defaultCategory = 'N';
+ 
+var lexicon = new natural.Lexicon(lexiconFilename, defaultCategory);
+var rules = new natural.RuleSet(rulesFilename);
+var tagger = new natural.BrillPOSTagger(lexicon, rules);
+ var sentence = ["search","for","elon","musk","book"];
+console.log(tagger.tag(sentence));
+})
 router.get("/campgrounds",function(req,res)
 {
     if(req.query.search)
     {
         const regex = new RegExp(escapeRegex(req.query.search), 'gi');
+    
+        // Camp.find({$text:{$search:regex}},{score:{$meta:"textScore"}},function(err,prods)
+        // {
+          
+        //   res.send(prods);
+            
+        // }).sort({score:{$meta:"textScore"}});
+    
           Camp.find({$or:[{"category":regex},{"name":regex}]},function(err,camps)
     {
         if(err)
@@ -1585,7 +1608,7 @@ router.get("/contact",isLoggedIn,function(req,res)
 
 router.get("*",function(req, res) {
      
-   res.redirect("/campgrounds"); 
+   res.render("category/notfound.ejs")
 });
 
 

@@ -17,9 +17,9 @@ var userRoutes = require("./routes/category");
 var indexRoutes      = require("./routes/index");
 
 
- mongoose.connect(process.env.database_url);
+// mongoose.connect(process.env.database_url);
 
-//mongoose.connect("mongodb://localhost/friendskart_v15");//last element specifies to name of the database and this
+mongoose.connect("mongodb://localhost:27017/friendskart_v15");//last element specifies to name of the database and this
 // line is used to create a database.
 
 app.use(compression());
@@ -63,7 +63,6 @@ app.use(userRoutes);
 app.use(indexRoutes);
 
 app.use(campgroundRoutes);
-
 
 
 app.listen(process.env.PORT,process.env.IP,function(){
