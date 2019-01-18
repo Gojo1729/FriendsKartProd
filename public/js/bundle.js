@@ -73326,11 +73326,12 @@ module.exports={
 }
 
 },{}],362:[function(require,module,exports){
+(function (process){
 var AssistantV2 = require('watson-developer-cloud/assistant/v2');
 var session;
 var service = new AssistantV2({
- "username": "bdde386e-301d-4d87-8f77-62b6f405c55b",
- "password": "IncWMRIaaUOM",
+ "username": process.env.svcusername,
+ "password": process.env.service,
   "url": 'https://gateway.watsonplatform.net/assistant/api/',
   "version": '2018-09-19'
 });
@@ -73344,23 +73345,6 @@ var service = new AssistantV2({
     console.log(JSON.stringify(response, null, 2));
   }
 });
-/*
-var AssistantV1 = require('watson-developer-cloud/assistant/v1');
-var service = new AssistantV1({
-  //  https://gateway.watsonplatform.net/assistant/api/v2/assistants/f1bd9515-34e3-4598-a0d2-fa37d3108d62/sessions
-  //"url": "https://gateway.watsonplatform.net/assistant/api",
-  "url"     : "https://gateway.watsonplatform.net/assistant/api",
-  "username": "bdde386e-301d-4d87-8f77-62b6f405c55b",
-  "password": "IncWMRIaaUOM",
-  "version" : "2018-09-20"
-
-});
-https://assistant-chat-eu-gb.watsonplatform.net/web/public/5b53fc17-a612-452a-a6da-8af5f3a867b0
-var workspace_id = "2166b2de-e774-4ab1-ae07-1fa56912a236";
-*/
-//"2166b2de-e774-4ab1-ae07-1fa56912a236"; // replace with workspace ID
-
-
 
 (function() {
     'use strict';
@@ -73616,4 +73600,5 @@ function processResponse(err, response) {
   
     
 }())
-},{"watson-developer-cloud/assistant/v2":354}]},{},[362]);
+}).call(this,require('_process'))
+},{"_process":138,"watson-developer-cloud/assistant/v2":354}]},{},[362]);

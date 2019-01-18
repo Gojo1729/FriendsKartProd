@@ -1,0 +1,1 @@
+console.error("Error: Cannot find module '/home/ubuntu/workspace/v12prod/chat.js' from '/home/ubuntu/workspace/v12prod'");
