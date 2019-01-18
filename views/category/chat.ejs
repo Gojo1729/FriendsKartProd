@@ -1,0 +1,31 @@
+<% include ../partials/header.ejs %> 
+ <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="../stylesheets/chat.css">
+  <script data-main="../js/chat.js" src="../node_modules/require.js"></script>
+ <div class="chatbubble">
+        <div class="unexpanded">
+            <div class="title">Need help?Chat with chiku here!!!</div>
+        </div>
+        <div class="expanded chat-window">
+          <div class="chats">
+            
+            <ul class="messages clearfix">
+               
+            </ul>
+        
+             <!--<img src="" id="pic" width="50%" height="20%" style="float:right">-->
+            <div class="input">
+              <form class="form-inline" id="messageSupport">
+                <div class="form-group">
+                  <input type="text" autocomplete="off" class="form-control" id="newMessage" placeholder="Enter Message">
+                   <input type="hidden" id="name" value="<%= name %>">
+                </div>
+                 <button style="float:right"type="submit" class="btn btn-primary ">Send</button>
+              </form>
+            </div>
+          </div>
+        </div>
+    </div>
+     <script src="../js/bundle.js"></script>
+     <% include ../partials/footer.ejs %>
+     
